@@ -9,6 +9,12 @@
     text-align: center;
 }
 
+.card h2 {
+    font-size: 24px; /* Adjust font size as needed */
+    color: #333; /* Adjust color as needed */
+    margin-bottom: 20px; /* Add spacing between title and form */
+}
+
 .container {
     padding: 2px 16px;
     display: flex;

@@ -2,40 +2,41 @@ import React, { ChangeEvent, FormEvent, useState } from 'react'
 import './ProfitLossCalc.css'
 
 interface StockData {
-  quantity: number;
-  purchasePrice: number;
-  currentPrice: number;
+    quantity: number;
+    purchasePrice: number;
+    currentPrice: number;
 }
 
 interface ProfitLoss {
-  amount: number | null;
-  percentage: number | null;
+    amount: number | null;
+    percentage: number | null;
 }
 
 const ProfitLossCalc = () => {
-  const [stockData, setStockData] = useState<StockData>({ quantity: 0, purchasePrice: 0, currentPrice: 0 });
+    const [stockData, setStockData] = useState<StockData>({ quantity: 0, purchasePrice: 0, currentPrice: 0 });
     const [profitLoss, setProfitLoss] = useState<ProfitLoss>({ amount: null, percentage: null });
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-      setStockData({
-          ...stockData,
-          [e.target.name]: parseFloat(e.target.value)
-      });
-  };
-  
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    const invested = stockData.quantity * stockData.purchasePrice;
-    const currentValuation = stockData.quantity * stockData.currentPrice;
-    const profitLossAmount = currentValuation - invested;
-    const profitLossPercentage = (profitLossAmount / invested) * 100;
+        setStockData({
+            ...stockData,
+            [e.target.name]: parseFloat(e.target.value)
+        });
+    };
 
-    setProfitLoss({ amount: profitLossAmount, percentage: profitLossPercentage });
-};
+    const handleSubmit = (e: FormEvent) => {
+        e.preventDefault();
+        const invested = stockData.quantity * stockData.purchasePrice;
+        const currentValuation = stockData.quantity * stockData.currentPrice;
+        const profitLossAmount = currentValuation - invested;
+        const profitLossPercentage = (profitLossAmount / invested) * 100;
 
-  return (
-    <div className='card'>
+        setProfitLoss({ amount: profitLossAmount, percentage: profitLossPercentage });
+    };
+
+    return (
+        <div className='card'>
             <div className='container'>
+                <h2>Share Profit or Loss Calculator</h2>
                 <form onSubmit={handleSubmit} className='form'>
                     <div className="form-group">
                         <label>Quantity: </label>
@@ -75,7 +76,7 @@ const ProfitLossCalc = () => {
                 )}
             </div>
         </div>
-  )
+    )
 }
 
 export default ProfitLossCalc
