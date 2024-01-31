@@ -1,12 +1,23 @@
+.share-container {
+    display: flex;
+    flex-wrap: wrap; /* Allow cards to wrap to the next line on small screens */
+    justify-content: space-around; /* Distribute cards horizontally with space between them */
+    background-color: #f4f4f4;
+    border-radius: 10px;
+    padding: 20px; /* Add padding to the container */
+}
+
 .card {
     max-width: 400px;
-    margin: 20px auto;
+    /* margin: 20px auto; */
+    margin: 10px; /* Add margin to separate cards */
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transition: 0.3s;
     border-radius: 5px;
     background-color: white;
     text-align: center;
+    flex: 1; /* Distribute available space equally among cards */
 }
 
 .card h2 {
