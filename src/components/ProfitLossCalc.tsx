@@ -10,11 +10,12 @@ interface StockData {
 interface ProfitLoss {
     amount: number | null;
     percentage: number | null;
+    isProfit:boolean;
 }
 
 const ProfitLossCalc = () => {
     const [stockData, setStockData] = useState<StockData>({ quantity: 0, purchasePrice: 0, currentPrice: 0 });
-    const [profitLoss, setProfitLoss] = useState<ProfitLoss>({ amount: null, percentage: null });
+    const [profitLoss, setProfitLoss] = useState<ProfitLoss>({ amount: null, percentage: null,isProfit:false });
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setStockData({
@@ -25,16 +26,21 @@ const ProfitLossCalc = () => {
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
+        
         const invested = stockData.quantity * stockData.purchasePrice;
         const currentValuation = stockData.quantity * stockData.currentPrice;
         const profitLossAmount = currentValuation - invested;
         const profitLossPercentage = (profitLossAmount / invested) * 100;
-
-        setProfitLoss({ amount: profitLossAmount, percentage: profitLossPercentage });
+        const isProfit = profitLossAmount >= 0;
+        setProfitLoss({ amount: profitLossAmount, percentage: profitLossPercentage, isProfit });
     };
+
+    // Determine whether it's a profit or loss
+   
 
     return (
         <div className='card'>
+             <h1 style={{ color: '#333' }}>Profit/Loss Calculator</h1>
             <div className='container'>
                 <h2>Share Profit or Loss Calculator</h2>
                 <form onSubmit={handleSubmit} className='form'>
@@ -70,8 +76,8 @@ const ProfitLossCalc = () => {
                 {profitLoss.amount && profitLoss.percentage !== null && (
                     <div>
                         <p>Invested Amount: ₹{(stockData.quantity * stockData.purchasePrice).toFixed(2)}</p>
-                        <p>Profit/Loss %: {profitLoss.percentage.toFixed(2)}%</p>
-                        <p>Profit/Loss Amount: ₹{profitLoss.amount.toFixed(2)}</p>
+                        <p className={profitLoss.isProfit ? 'green-text' : 'red-text'}>{profitLoss.isProfit?"Profit":"Loss"} %: {profitLoss.percentage.toFixed(2)}%</p>
+                        <p className={profitLoss.isProfit ? 'green-text' : 'red-text'}>{profitLoss.isProfit?"Profit":"Loss"} Amount: ₹{profitLoss.amount.toFixed(2)}</p>
                     </div>
                 )}
             </div>

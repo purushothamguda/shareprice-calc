@@ -54,6 +54,14 @@
     background-color: #fff;
     color: #333;
 }
+.green-text {
+    color: green;
+}
+
+.red-text {
+    color: red;
+}
+
 
 button {
     padding: 10px 15px;
