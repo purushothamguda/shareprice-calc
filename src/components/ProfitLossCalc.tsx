@@ -2,6 +2,7 @@ import React, { ChangeEvent, FormEvent, useState } from 'react'
 import './ProfitLossCalc.css'
 import SharePurchaseCalculator from './SharePurchaseCalculator';
 import ProfitOnInvestmentCalculator from './ProfitOnInvestmentCalculator';
+import GridExample from './ag-grid/GridExample';
 
 interface StockData {
     quantity: number;
@@ -39,8 +40,8 @@ const ProfitLossCalc = () => {
 
     return (
         <div className='share-container'>
-            <ProfitOnInvestmentCalculator/>
-              <SharePurchaseCalculator/>
+            <ProfitOnInvestmentCalculator />
+            <SharePurchaseCalculator />
             <div className='card'>
                 <h1 style={{ color: '#333' }}>Profit/Loss Calculator</h1>
                 <div className='container'>
@@ -84,7 +85,6 @@ const ProfitLossCalc = () => {
                     )}
                 </div>
             </div>
-         
         </div>
     )
 }
