@@ -34,12 +34,10 @@ const RouteMain = () => {
        {isLoggedIn && <Header />}
       <div className='mainContent'>
         <Routes>
-          <Route path='/'  
-           element={isLoggedIn ? <Navigate to="/dashboard" /> : <LoginPage />}
-          >
+          <Route path='/' >
             <Route index element={<LoginPage />} />
-            <Route  path='/register' element={isLoggedIn ? <Navigate to="/dashboard" /> : <RegistrationPage />}  />
-            <Route  element={isLoggedIn ? <Dashboard /> : <Navigate to="/" />}  />
+            <Route  path='/register' element={<RegistrationPage />}  />
+            <Route path='/dashboard' element={ <Dashboard /> }  />
           </Route>
         </Routes>
       </div>
