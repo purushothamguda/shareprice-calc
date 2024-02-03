@@ -1,9 +1,10 @@
-import { TextField, Button, Snackbar } from '@mui/material'
+import { TextField, Button, Snackbar, IconButton, Alert, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import '../styles/RegistrationPage.scss'
 import { Link, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase/firebase';
+import CloseIcon from '@mui/icons-material/Close';
 
 const RegistrationPage = () => {
     const navigate = useNavigate();
@@ -11,44 +12,68 @@ const RegistrationPage = () => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [notice, setNotice] = useState("");
-    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [open, setOpen] = useState(false);
+
+    const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
+    };
 
     const signupWithUsernameAndPassword = async (e: any) => {
         e.preventDefault();
         if (password === confirmPassword) {
             try {
                 await createUserWithEmailAndPassword(auth, email, password);
-                setOpenSnackbar(true);
-                navigate("/");
+                setNotice("User Created Successfully");
+                setOpen(true);
+                resetFields();
+                setTimeout(() => {
+                    navigate('/')
+                }, 2000)
             } catch {
                 setNotice("Sorry, something went wrong. Please try again.");
+                setOpen(true);
             }
         } else {
             setNotice("Passwords don't match. Please try again.");
+            setOpen(true);
         }
     };
 
-    const handleOpenSnackbar = () => {
-        setOpenSnackbar(true);
-    };
+    const resetFields=()=>{
+        setEmail('');
+        setPassword('');
+        setConfirmPassword('');
+    }
+    
 
-    const handleCloseSnackbar = (event: React.SyntheticEvent | Event, reason?: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setOpenSnackbar(false);
-    };
+    const handleCancel=()=>{
+        resetFields();
+    }
 
     return (
         <>
-            <Snackbar
-                open={openSnackbar}
-                autoHideDuration={6000}
-                onClose={handleCloseSnackbar}
-                message="User Created Successfully"
-            />
+            <div>
+                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                    <Alert
+                        onClose={handleClose}
+                        severity="success"
+                        variant="filled"
+                        sx={{ width: '100%' }}
+                    >
+                        {notice}
+                    </Alert>
+                </Snackbar>
+            </div>
             <div className='register-container'>
+
                 <div className='register-form'>
+                <div style={{marginBottom:'20px'}}>
+                    <Typography variant='h4'>Sign Up</Typography>
+                </div>  
                     <TextField
                         label="Email"
                         value={email}
@@ -67,7 +92,9 @@ const RegistrationPage = () => {
                         onChange={(e) => setConfirmPassword(e.target.value)}
                     />
                     <div className='buttonContainer'>
-                        <Button variant="outlined" className='cancelButton'>
+                        <Button variant="outlined" className='cancelButton'
+                        onClick={handleCancel}
+                        >
                             Cancel
                         </Button>
                         <Button
