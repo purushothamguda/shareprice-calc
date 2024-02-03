@@ -1,0 +1,205 @@
+// @import "./variables";
+
+// .headerOutletWrapper {
+//   margin-top: 64px;
+//   @media screen and (max-width: 575px) {
+//     margin-top: 56px;
+//   }
+// }
+
+// .header {
+//   & .MuiAppBar-root {
+//     background-color: #ffffff;
+//     box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.1);
+//     padding: 0px 30px;
+//     @media screen and (max-width: 575px) {
+//       padding: 0px 20px;
+//     }
+//   }
+//   .header_lft {
+//     .header_backbtn {
+//       display: flex;
+//       align-items: center;
+//       & .MuiIconButton-root {
+//         background-color: $grey-light-main;
+//         border-radius: 8px;
+//         color: $text-color-default;
+//       }
+//       .header_backbtn_text {
+//         color: $text-color-default;
+//         font-size: 16px;
+//         font-weight: 500;
+//         display: inline-block;
+//         margin-left: 10px;
+//       }
+//     }
+//     .header_lft_content {
+//       display: flex;
+//       align-items: center;
+//       .falconLogo {
+//         width: 148px;
+//         height: 24px;
+//         display: inline-block;
+//         cursor: pointer;
+//       }
+//       .header_chip {
+//         background: rgba(45, 79, 186, 0.1);
+//         border-radius: 8px;
+//         color: $blue-main;
+//         font-weight: 600;
+//         font-size: 16px;
+//         line-height: 24px;
+//       }
+//     }
+//   }
+//   .header_ryt {
+//     display: flex;
+//     align-items: center;
+//     .notificationsIconBox {
+//       width: 44px;
+//       height: 44px;
+//       margin-right: 14px;
+//       cursor: pointer;
+//       &:hover {
+//         svg {
+//           rect {
+//             fill: #2D4FBA;
+//           }
+//           path {
+//             fill: #ffffff;
+//           }
+//         }
+//       }
+//     }
+//     .userSettings {
+//       .userSettingBtn {
+//         &.MuiIconButton-root {
+//           padding: 0;
+//           background-color: transparent;
+//           border-radius: 0;
+//           &:hover {
+//             background-color: transparent;
+//           }
+//         }
+//         .avatar_img {
+//           width: 44px;
+//           height: 44px;
+//           background-color: $text-color-dark;
+//           @media screen and (max-width: 414px) {
+//             width: 34px;
+//             height: 34px;
+//           }
+//           img {
+//             object-fit: contain;
+//             background: #F3F3F3;
+//           }
+//         }
+//         .avatar_nameBox {
+//           background: $text-color-dark;
+//           width: 44px;
+//           height: 44px;
+//           display: flex;
+//           align-items: center;
+//           justify-content: center;
+//           border-radius: 8px;
+//           .avatar_name {
+//             font-size: 28px;
+//             line-height: 28px;
+//             font-weight: 600;
+//             color: $blue-light;
+//           }
+//         }
+//       }
+//       .avatarDetails {
+//         text-align: left;
+//         margin-left: 10px;
+//         .avatar_title {
+//           font-size: 16px;
+//           font-weight: 600;
+//           line-height: 24px;
+//           color: $text-color-default;
+//           @media screen and (max-width: 414px) {
+//             line-height: 18px;
+//           }
+//         }
+//         .avatar_subtitle {
+//           font-size: 14px;
+//           font-weight: 500;
+//           line-height: 24px;
+//           color: $grey-light;
+//           @media screen and (max-width: 414px) {
+//             line-height: 18px;
+//           }
+//         }
+//       }
+//       .userSettingBtn_arrow {
+//         margin-left: 20px;
+//         @media screen and (max-width: 414px) {
+//           margin-left: 5px;
+//         }
+//       }
+//     }
+//   }
+// }
+// .headerMenu {
+//   &.MuiPopover-root {
+
+//     // ul {
+//     //   margin-top: 49px;
+//     // }
+//     // margin-top: 49px;
+//     // @media screen and (max-width: 575px) {
+//     //   margin-top: 41px;
+//     // }
+//     & .MuiPaper-root {
+//       top: 64px !important;
+//       width: 240px;
+//       max-width: 100%;
+//       box-shadow: -1px 7px 20px rgba(0, 0, 0, 0.1);
+//       border-radius: 0px 0px 8px 8px;
+//       @media screen and (max-width: 575px) {
+//         width: 200px;
+//       }
+//       @media screen and (max-width: 575px) {
+//         width: 140px;
+//       }
+//     }
+//     & .MuiList-root {
+//       padding: 0;
+//     }
+//     & .MuiMenuItem-root {
+//       padding: 10px 18px;
+//       font-size: 16px;
+//       font-weight: 500;
+//       line-height: 20px;
+//       @media screen and (max-width: 575px) {
+//         padding: 6px 12px;
+//       }
+//       & .MuiTypography-root {
+//         font-size: 16px;
+//         font-weight: 500;
+//         line-height: 20px;
+//       }
+//       .headerMenuListItem {
+//         display: flex;
+//         align-items: center;
+//         img {
+//           margin-right: 10px;
+//           width: 18px;
+//           height: 18px;
+//         }
+//       }
+//       &:hover {
+//         background-color: $grey-light-main;
+//         color: $blue-main;
+//         img {
+//           filter: invert(23%) sepia(50%) saturate(4103%) hue-rotate(222deg) brightness(82%) contrast(83%);
+//         }
+//       }
+//     }
+//   }
+// }
+
+// .remainingTime {
+//   display: none;
+// }
