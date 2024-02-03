@@ -10,38 +10,41 @@ import Dashboard from '../views/Dashboard'
 import '../styles/RouteMain.scss'
 import { User, onAuthStateChanged } from 'firebase/auth'
 import { auth } from '../firebase/firebase'
+import useAuth from '../customHooks/useAuth'
+import Admin from '../views/Admin'
+import PrivateRoutes from './PrivateRoutes'
+import Home from '../views/Home'
+import ErrorComp from '../views/ErrorComp'
+import PublicRoutes from './PublicRoutes'
 
 const RouteMain = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // User is signed in
-        setIsLoggedIn(true);
-      } else {
-        // User is signed out
-        setIsLoggedIn(false);
-      }
-    });
-
-    // Cleanup subscription on unmount
-    return () => unsubscribe();
-  }, []);
-
+  
   return (
     <div className='appContainer'>
-       {isLoggedIn && <Header />}
+      {/* {isLoggedIn && <Header />} */}
       <div className='mainContent'>
         <Routes>
-          <Route path='/' >
-            <Route index element={<LoginPage />} />
-            <Route  path='/register' element={<RegistrationPage />}  />
-            <Route path='/dashboard' element={ <Dashboard /> }  />
+          <Route element={<PrivateRoutes />}>
+            <Route path='/' element={<Home />} />
+            <Route path='/dashboard' element={<Dashboard />} />
+            <Route path='/admin' element={<Admin />} />
           </Route>
+
+          <Route element={<PublicRoutes />}>
+            <Route path='/login' element={<LoginPage />} />
+            <Route path='/register' element={<RegistrationPage />} />
+          </Route>
+
+          <Route path='*' element={<PageNotFound />} />
+          {/* <Route index element={<LoginPage />} />
+          <Route path='/login' element={<LoginPage />} />
+          <Route path='/register' element={<RegistrationPage />} />
+          <Route path='/dashboard' element={<Dashboard />} />
+          <Route path='/admin' element={<Admin />} /> */}
+
         </Routes>
       </div>
-      {isLoggedIn && <Footer />}
+      {/* {isLoggedIn && <Footer />} */}
     </div>
 
   )

@@ -7,8 +7,10 @@ import { ThemeProvider } from '@emotion/react';
 import theme from './theme';
 import { CssBaseline } from '@mui/material';
 import RouteMain from './routes/RouteMain';
+import useAuth from './customHooks/useAuth';
 
 function App() {
+  useAuth();
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
