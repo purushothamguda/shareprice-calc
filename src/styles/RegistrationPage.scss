@@ -1,0 +1,60 @@
+.register-container{
+    display: flex;
+    padding: 20px;
+    align-items: center;
+    justify-content: center;
+
+    @media (max-width:600px){
+        padding: 10px;
+    }
+
+    .register-form{
+        display: flex;
+        flex-direction: column;
+        max-width: 400px;
+        width: 100%;
+        padding:20px;
+        background-color: white;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+        .MuiTextField-root {
+            margin-bottom: 16px;
+
+            &:hover {
+                box-shadow: 0 0 5px rgba(33, 150, 243, 0.5); // subtle shadow on hover
+            }
+
+            .MuiInput-underline:after {
+                border-bottom: 2px solid #2196f3; // changes underline color after typing
+            }
+
+            .MuiOutlinedInput-root {
+                &.Mui-focused fieldset {
+                    border-color: #2196f3; // changes border color when focused
+                    border-width: 1px;
+                }
+            }
+        }
+
+        .buttonContainer {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 20px;
+
+            .cancelButton{
+              color: red;
+              border-color: red;
+            }
+
+            // .MuiButton-root {
+            //     margin-top: 8px;
+            //     padding: 8px 16px;
+            // }
+        }
+
+        @media (max-width: 600px) {
+            padding: 10px;
+        }
+
+    }
+}
