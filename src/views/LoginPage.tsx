@@ -4,10 +4,13 @@ import { Link, useNavigate } from 'react-router-dom'
 import "../styles/LoginPage.scss"
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../firebase/firebase'
+import { useAppDispatch } from '../redux/hooks'
+import { setUser } from '../redux/userSlice'
 
 
 const LoginPage = () => {
     const navigate = useNavigate();
+    const dispatch=useAppDispatch();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [notice, setNotice] = useState("");
@@ -25,8 +28,15 @@ const LoginPage = () => {
         e.preventDefault();
 
         try {
-            await signInWithEmailAndPassword(auth, email, password);
+            const userCredential =await signInWithEmailAndPassword(auth, email, password);
             console.log(auth, 'loginpage auth object')
+            const userData = {
+                uid: userCredential.user.uid,
+                email: userCredential.user.email,
+                displayName: userCredential.user.displayName,
+                emailVerified: userCredential.user.emailVerified,
+              };
+              dispatch(setUser(userData));
             navigate("/");
         } catch {
             setNotice("You entered a wrong username or password.");

@@ -6,13 +6,12 @@ import { Button } from '@mui/material';
 
 const LogOut = () => {
     const navigate = useNavigate();
-    const user = auth.currentUser;
 
     const logoutUser = async (e:any) => {
         e.preventDefault();
         await signOut(auth);
         console.log(auth,'logout')
-        navigate("/");
+        navigate("/login");
     }
 
   return (

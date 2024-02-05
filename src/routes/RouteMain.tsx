@@ -16,18 +16,20 @@ import PrivateRoutes from './PrivateRoutes'
 import Home from '../views/Home'
 import ErrorComp from '../views/ErrorComp'
 import PublicRoutes from './PublicRoutes'
+import Profile from '../views/Profile'
 
 const RouteMain = () => {
   
   return (
     <div className='appContainer'>
-      {/* {isLoggedIn && <Header />} */}
+      <Header />
       <div className='mainContent'>
         <Routes>
           <Route element={<PrivateRoutes />}>
             <Route path='/' element={<Home />} />
             <Route path='/dashboard' element={<Dashboard />} />
             <Route path='/admin' element={<Admin />} />
+            <Route path='/profile' element={<Profile/>}/>
           </Route>
 
           <Route element={<PublicRoutes />}>
@@ -44,7 +46,7 @@ const RouteMain = () => {
 
         </Routes>
       </div>
-      {/* {isLoggedIn && <Footer />} */}
+     <Footer />
     </div>
 
   )

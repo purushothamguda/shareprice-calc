@@ -11,21 +11,33 @@ import { User, signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { auth } from "../firebase/firebase";
 import { AccountCircle } from '@mui/icons-material';
-import { Menu, MenuItem } from '@mui/material';
+import { Avatar, Menu, MenuItem, Tooltip } from '@mui/material';
+import LogOut from '../views/LogOut';
+import { useAppSelector } from '../redux/hooks';
+import AdbIcon from '@mui/icons-material/Adb';
+
+const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 export default function ButtonAppBar() {
   const navigate = useNavigate();
-  // const [auth, setAuth] = React.useState(true);
+  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
+  console.log(isLoggedIn, 'header component isloggedIn:')
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [currentUser, setCurrentUser] = useState<User|null>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
 
-  useEffect(() => {
-    // This assumes you have set up firebase authentication
-    auth.onAuthStateChanged((user) => {
-      setCurrentUser(user);
-    });
-  }, []);
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElUser(event.currentTarget);
+  };
 
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -34,19 +46,34 @@ export default function ButtonAppBar() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  
-  const logoutUser = async (e:any) => {
-    e.preventDefault();
+
+  const logoutUser = async () => {
+    // e.preventDefault();
     await signOut(auth);
-    console.log(auth,'logout')
-    navigate("/");
-    handleClose();
-}
-  return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Toolbar>
-          {/* <IconButton
+    console.log(auth, 'logout')
+    navigate("/login");
+  }
+
+  const handleMenuClick = (setting: string) => {
+    handleCloseUserMenu(); // Close the menu
+
+    // Navigate based on the setting
+    if (setting === 'Logout') {
+      logoutUser();
+    } else if (setting === 'Profile') {
+      navigate('/profile');
+    } else if (setting === 'Dashboard') {
+      navigate('/dashboard');
+    } else if (setting === 'Account') {
+      // Assuming you have a route for 'Account'
+      navigate('/account');
+    }
+  }
+    return (
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar position="static">
+          <Toolbar>
+            {/* <IconButton
             size="large"
             edge="start"
             color="inherit"
@@ -54,50 +81,43 @@ export default function ButtonAppBar() {
             sx={{ mr: 2 }}
           >
             <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            News
-          </Typography>
-          <Button color="inherit">Login</Button> */}
-           {/* Place your company logo here */}
-        {currentUser && (
-          <div>
-            <IconButton
-              edge="end"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleMenu}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={handleClose}>
-                <Typography variant="h6">
-                  {currentUser.email} {/* Display user email or any other info */}
-                </Typography>
-              </MenuItem>
-              <MenuItem onClick={logoutUser}>Logout</MenuItem>
-            </Menu>
-          </div>
-        )}
-        </Toolbar>
-      </AppBar>
-    </Box>
-  );
-}
+          </IconButton> */}
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              BANK OF AMERICA
+            </Typography>
+            {/* <Button color="inherit">Login</Button> */}
+            {isLoggedIn && <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map((setting) => (
+                  <MenuItem key={setting} onClick={() => handleMenuClick(setting)}>
+                    <Typography textAlign="center">{setting}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>}
+            {/* {isLoggedIn &&  <Button color='inherit' onClick={logoutUser}>Logout</Button>} */}
+          </Toolbar>
+        </AppBar>
+      </Box>
+    );
+  }

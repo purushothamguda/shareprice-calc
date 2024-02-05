@@ -11,6 +11,7 @@ const Footer = () => {
         width: '100%',
       }}>
     {/* Footer content here */}
+    <p>@copyright 2024</p>
   </Box>
   )
 }
