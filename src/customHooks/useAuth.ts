@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { getIdToken, onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../firebase/firebase';
 import { useAppDispatch } from '../redux/hooks';
-import { setLoggedIn } from '../redux/authSlice';
+import { setLoading, setLoggedIn } from '../redux/authSlice';
 
 const useAuth = () => {
   const dispatch=useAppDispatch();
@@ -13,7 +13,7 @@ const useAuth = () => {
             console.log(user,'useAuth.ts User details')
             // User is signed in
             dispatch(setLoggedIn(true));
-  
+            dispatch(setLoading(false));
             // getIdToken(user)
             // .then((idToken) => {
             //   // Save the ID token to localStorage
@@ -27,6 +27,7 @@ const useAuth = () => {
           } else {
             // User is signed out
             dispatch(setLoggedIn(false));
+            dispatch(setLoading(false));
             // localStorage.removeItem('idToken');
           }
         });
