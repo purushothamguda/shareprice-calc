@@ -6,6 +6,8 @@ import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../firebase/firebase'
 import { useAppDispatch } from '../redux/hooks'
 import { setUser } from '../redux/userSlice'
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+
 
 interface FirebaseError extends Error {
     code: string;
@@ -64,6 +66,24 @@ const LoginPage = () => {
 
         }
     }
+    const loginWithGoogle = async () => {
+        const provider = new GoogleAuthProvider();
+        try {
+            const result = await signInWithPopup(auth, provider);
+            // Extract user details from result and use as needed
+            const user = result.user;
+            // Dispatch user data to your store or handle as you prefer
+            dispatch(setUser(user))
+            navigate("/");
+        } catch (error) {
+            const errorCode = (error as { code?: string }).code;
+            const errorMessage = (error as { message?: string }).message;
+            setNotice(errorMessage || "Error signing in with Google");
+            setOpenSnackbar(true);
+        }
+    };
+
+
 
     return (
         <>
@@ -100,17 +120,23 @@ const LoginPage = () => {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                     <div className='buttonContainer'>
-                        <Button variant="outlined" color='primary'>
+                        <Button variant="outlined" color='primary' sx={{ borderRadius: '16px' }}>
                             Cancel
                         </Button>
                         <Button
                             variant="contained"
                             color="primary"
                             onClick={(e) => loginWithUsernameAndPassword(e)}
+                            sx={{ borderRadius: '16px' }}
                         >
                             Login
                         </Button>
                     </div>
+                    {/* <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Button variant="contained" color="secondary" onClick={loginWithGoogle} sx={{ borderRadius: '16px' }}>
+                            Sign in with Google
+                        </Button>
+                    </div> */}
                     <p>
                         New user? <Link to="/register">Register here</Link>
                     </p>

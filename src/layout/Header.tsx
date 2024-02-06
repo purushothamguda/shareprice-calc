@@ -3,27 +3,23 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import { useEffect, useState } from 'react';
-import { User, signOut } from 'firebase/auth';
+import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { auth } from "../firebase/firebase";
-import { AccountCircle } from '@mui/icons-material';
 import { Avatar, Menu, MenuItem, Tooltip } from '@mui/material';
-import LogOut from '../views/LogOut';
-import { useAppSelector } from '../redux/hooks';
-import AdbIcon from '@mui/icons-material/Adb';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { setLoggedIn } from '../redux/authSlice';
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 export default function ButtonAppBar() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
   console.log(isLoggedIn, 'header component isloggedIn:')
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
 
@@ -31,27 +27,27 @@ export default function ButtonAppBar() {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate("/login");
+    }
+  }, [isLoggedIn, navigate]);
+  
   const logoutUser = async () => {
     // e.preventDefault();
-    await signOut(auth);
-    console.log(auth, 'logout')
-    navigate("/login");
+    try {
+      await signOut(auth);
+      dispatch(setLoggedIn(false));
+      console.log("Logged out successfully");
+      navigate("/login");
+
+    } catch (error) {
+      console.error("Logout failed: ", error);
+    }
   }
 
   const handleMenuClick = (setting: string) => {
@@ -69,10 +65,11 @@ export default function ButtonAppBar() {
       navigate('/account');
     }
   }
-    return (
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static">
-          <Toolbar>
+  return (
+    <header>
+      <Box sx={{ flexGrow: 1, }}>
+        <AppBar position="static" >
+          <Toolbar sx={{ margin: '0px 58.3333px' }}>
             {/* <IconButton
             size="large"
             edge="start"
@@ -119,5 +116,6 @@ export default function ButtonAppBar() {
           </Toolbar>
         </AppBar>
       </Box>
-    );
-  }
+    </header>
+  );
+}

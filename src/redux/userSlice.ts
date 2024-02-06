@@ -5,7 +5,7 @@ export interface UserState {
   uid: string;
   email: string|null;
   displayName: string | null;
-  phoneNumber?: string;
+  phoneNumber?: string | null;
   // Add other user fields as needed
 }
 
