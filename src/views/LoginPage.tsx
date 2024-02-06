@@ -45,7 +45,7 @@ const LoginPage = () => {
                 displayName: userCredential.user.displayName,
                 emailVerified: userCredential.user.emailVerified,
             };
-            dispatch(setUser(userData));
+            // dispatch(setUser(userData));
             navigate("/");
         } catch (error) {
             const firebaseError = error as FirebaseError;

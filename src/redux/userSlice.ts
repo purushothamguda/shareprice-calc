@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 // Define a type for the slice state
-interface UserState {
+export interface UserState {
   uid: string;
   email: string|null;
   displayName: string | null;
-  emailVerified: boolean;
+  phoneNumber?: string;
   // Add other user fields as needed
 }
 
@@ -14,7 +14,6 @@ const initialState: UserState = {
   uid: '',
   email: '',
   displayName: null,
-  emailVerified: false,
 };
 
 export const userSlice = createSlice({

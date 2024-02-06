@@ -3,8 +3,11 @@ import React, { useState } from 'react'
 import '../styles/RegistrationPage.scss'
 import { Link, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase/firebase';
+import { auth, db } from '../firebase/firebase';
 import CloseIcon from '@mui/icons-material/Close';
+import { collection, addDoc } from 'firebase/firestore';
+import { setUser } from '../redux/userSlice';
+import { useAppDispatch } from '../redux/hooks';
 
 interface FirebaseError extends Error {
     code: string;
@@ -12,12 +15,15 @@ interface FirebaseError extends Error {
 
 const RegistrationPage = () => {
     const navigate = useNavigate();
+    const dispatch=useAppDispatch();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [displayName, setDisplayName] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
     const [notice, setNotice] = useState("");
     const [open, setOpen] = useState(false);
-
+    
     const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
             return;
@@ -63,7 +69,18 @@ const RegistrationPage = () => {
 
         if (password === confirmPassword) {
             try {
-                await createUserWithEmailAndPassword(auth, email, password);
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const usersCollection = collection(db, 'users');
+                const userData = {
+                    uid: userCredential.user.uid,
+                    email: email,
+                    displayName: displayName,
+                    phoneNumber: phoneNumber,
+                    emailVerified:false,
+                    // ... other fields
+                };
+                await addDoc(usersCollection, userData);
+                // dispatch(setUser(userData));
                 setNotice("User Created Successfully");
                 setOpen(true);
                 resetFields();
@@ -156,6 +173,8 @@ const RegistrationPage = () => {
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                     />
+                    <TextField label="Display Name" value={displayName} onChange={(e) => setDisplayName(e.target.value)} />
+                    <TextField label="Phone Number" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
                     <div className='buttonContainer'>
                         <Button variant="outlined" className='cancelButton'
                             onClick={handleCancel}
