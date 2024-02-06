@@ -11,7 +11,7 @@ const LogOut = () => {
         e.preventDefault();
         await signOut(auth);
         console.log(auth,'logout')
-        navigate("/login");
+        navigate("/welcome");
     }
 
   return (

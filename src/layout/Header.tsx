@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { auth } from "../firebase/firebase";
-import { Avatar, Menu, MenuItem, Tooltip } from '@mui/material';
+import { Avatar, Button, Menu, MenuItem, Tooltip } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { setLoggedIn } from '../redux/authSlice';
 
@@ -31,11 +31,11 @@ export default function ButtonAppBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-  useEffect(() => {
-    if (!isLoggedIn) {
-      navigate("/login");
-    }
-  }, [isLoggedIn, navigate]);
+  // useEffect(() => {
+  //   if (!isLoggedIn) {
+  //     navigate("/");
+  //   }
+  // }, [isLoggedIn, navigate]);
   
   const logoutUser = async () => {
     // e.preventDefault();
@@ -43,7 +43,7 @@ export default function ButtonAppBar() {
       await signOut(auth);
       dispatch(setLoggedIn(false));
       console.log("Logged out successfully");
-      navigate("/login");
+      navigate("/welcome");
 
     } catch (error) {
       console.error("Logout failed: ", error);
@@ -82,8 +82,8 @@ export default function ButtonAppBar() {
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               BANK OF AMERICA
             </Typography>
-            {/* <Button color="inherit">Login</Button> */}
-            {isLoggedIn && <Box sx={{ flexGrow: 0 }}>
+          
+            {isLoggedIn ? <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
@@ -111,7 +111,7 @@ export default function ButtonAppBar() {
                   </MenuItem>
                 ))}
               </Menu>
-            </Box>}
+            </Box>:<Button color="inherit" onClick={()=>navigate('/login')}>Login</Button>}
             {/* {isLoggedIn &&  <Button color='inherit' onClick={logoutUser}>Logout</Button>} */}
           </Toolbar>
         </AppBar>
