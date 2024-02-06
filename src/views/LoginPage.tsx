@@ -7,49 +7,75 @@ import { auth } from '../firebase/firebase'
 import { useAppDispatch } from '../redux/hooks'
 import { setUser } from '../redux/userSlice'
 
+interface FirebaseError extends Error {
+    code: string;
+}
 
 const LoginPage = () => {
     const navigate = useNavigate();
-    const dispatch=useAppDispatch();
+    const dispatch = useAppDispatch();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [notice, setNotice] = useState("");
-    const [open, setOpen] = useState(false);
+    const [openSnackbar, setOpenSnackbar] = useState(false);
 
-    const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    const handleCloseSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
             return;
         }
-
-        setOpen(false);
+        setOpenSnackbar(false);
     };
+
 
     const loginWithUsernameAndPassword = async (e: any) => {
         e.preventDefault();
 
+        if (!email || !password) {
+            setNotice("Please enter both email and password.");
+            setOpenSnackbar(true);
+            return;
+        }
+
         try {
-            const userCredential =await signInWithEmailAndPassword(auth, email, password);
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
             console.log(auth, 'loginpage auth object')
             const userData = {
                 uid: userCredential.user.uid,
                 email: userCredential.user.email,
                 displayName: userCredential.user.displayName,
                 emailVerified: userCredential.user.emailVerified,
-              };
-              dispatch(setUser(userData));
+            };
+            dispatch(setUser(userData));
             navigate("/");
-        } catch {
-            setNotice("You entered a wrong username or password.");
+        } catch (error) {
+            const firebaseError = error as FirebaseError;
+            switch (firebaseError.code) {
+                case 'auth/invalid-email':
+                    setNotice('Invalid email format.')
+                    break;
+                case 'auth/user-not-found':
+                case 'auth/wrong-password':
+                    setNotice('Invalid username or password.');
+                    break;
+                default:
+                    setNotice("An error occured. Please try again")
+            }
+            setOpenSnackbar(true)
+
         }
     }
 
     return (
         <>
             <div>
-                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                <Snackbar
+                    open={openSnackbar}
+                    autoHideDuration={6000}
+                    onClose={handleCloseSnackbar}
+                >
                     <Alert
-                        onClose={handleClose}
-                        severity="success"
+                        onClose={handleCloseSnackbar}
+                        severity="error" // or "success" based on the context
                         variant="filled"
                         sx={{ width: '100%' }}
                     >

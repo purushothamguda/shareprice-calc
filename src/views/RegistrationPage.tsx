@@ -6,6 +6,10 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase/firebase';
 import CloseIcon from '@mui/icons-material/Close';
 
+interface FirebaseError extends Error {
+    code: string;
+}
+
 const RegistrationPage = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
@@ -24,6 +28,39 @@ const RegistrationPage = () => {
 
     const signupWithUsernameAndPassword = async (e: any) => {
         e.preventDefault();
+        const hasUppercase = /[A-Z]/.test(password);
+        const hasLowercase = /[a-z]/.test(password);
+        const hasNumbers = /\d/.test(password);
+        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+        //The function first checks if all fields are filled
+        if (!email || !password || !confirmPassword) {
+            setNotice("Please fill in all fields.");
+            setOpen(true);
+            return;
+        }
+
+        // Simple email validation
+        const emailRegex = /\S+@\S+\.\S+/;
+        if (!emailRegex.test(email)) {
+            setNotice("Please enter a valid email address.");
+            setOpen(true);
+            return;
+        }
+
+        // Strong password validation
+        if (!hasUppercase || !hasLowercase || !hasNumbers || !hasSpecialChar || password.length < 8) {
+            setNotice("Password must be at least 8 characters long and include uppercase, lowercase, numeric, and special characters.");
+            setOpen(true);
+            return;
+        }
+        // Password and confirm password match validation
+        if (password !== confirmPassword) {
+            setNotice("Passwords do not match.");
+            setOpen(true);
+            return;
+        }
+
         if (password === confirmPassword) {
             try {
                 await createUserWithEmailAndPassword(auth, email, password);
@@ -33,7 +70,21 @@ const RegistrationPage = () => {
                 setTimeout(() => {
                     navigate('/')
                 }, 2000)
-            } catch {
+            } catch (error) {
+                const firebaseError = error as FirebaseError;
+                switch (firebaseError.code) {
+                    case 'auth/email-already-in-use':
+                        setNotice('The email address is already in use by another account.')
+                        break;
+                    case 'auth/invalid-email':
+                        setNotice('The email address is not valid.')
+                        break;
+                    case 'auth/weak-password':
+                        setNotice('The password is too weak.')
+                        break;
+                    default:
+                        setNotice('Sorry, something went wrong. Please try again.')
+                }
                 setNotice("Sorry, something went wrong. Please try again.");
                 setOpen(true);
             }
@@ -43,16 +94,29 @@ const RegistrationPage = () => {
         }
     };
 
-    const resetFields=()=>{
+    const resetFields = () => {
         setEmail('');
         setPassword('');
         setConfirmPassword('');
     }
-    
 
-    const handleCancel=()=>{
+
+    const handleCancel = () => {
         resetFields();
     }
+
+    const PasswordHints = () => {
+        return (
+            <ul style={{ margin: '10px 0px', listStyle: 'inside' }}>
+                <li>At least 8 characters</li>
+                <li>At least one uppercase letter (A-Z)</li>
+                <li>At least one lowercase letter (a-z)</li>
+                <li>At least one number (0-9)</li>
+                <li>At least one special character (!@#$%^&*)</li>
+            </ul>
+        );
+    };
+
 
     return (
         <>
@@ -60,7 +124,7 @@ const RegistrationPage = () => {
                 <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
                     <Alert
                         onClose={handleClose}
-                        severity="success"
+                        severity="error"
                         variant="filled"
                         sx={{ width: '100%' }}
                     >
@@ -71,9 +135,9 @@ const RegistrationPage = () => {
             <div className='register-container'>
 
                 <div className='register-form'>
-                <div style={{marginBottom:'20px'}}>
-                    <Typography variant='h4'>Sign Up</Typography>
-                </div>  
+                    <div style={{ marginBottom: '20px' }}>
+                        <Typography variant='h4'>Sign Up</Typography>
+                    </div>
                     <TextField
                         label="Email"
                         value={email}
@@ -85,6 +149,7 @@ const RegistrationPage = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
+                    <PasswordHints />
                     <TextField
                         label="Confirm Password"
                         type="password"
@@ -93,7 +158,7 @@ const RegistrationPage = () => {
                     />
                     <div className='buttonContainer'>
                         <Button variant="outlined" className='cancelButton'
-                        onClick={handleCancel}
+                            onClick={handleCancel}
                         >
                             Cancel
                         </Button>
